@@ -15,6 +15,7 @@ function init(){
   add_click();
   clear_click();
   search();
+  hljs.initHighlightingOnLoad();
   return true;
 }
 
@@ -45,13 +46,11 @@ function clear_click(){
 function create_sticky(sticky){
   data['sticky'].push(sticky);
   if (sticky != null){
-    var width = parseInt(sticky['yoko']);
-    var height = parseInt(sticky['tate']);
+    var width = parseInt(sticky['yoko']) + 20;
+    var height = parseInt(sticky['tate']) + 40;
     var textarea = $('<textarea>')
       .attr({placeholder: 'set Text'})
       .addClass('form-control')
-      .width(width)
-      .height(height)
       .text(sticky['text']);
     var delete_btn = $('<a>')
       .addClass('glyphicon glyphicon-remove delete_btn')
@@ -59,6 +58,8 @@ function create_sticky(sticky){
     var sticky = $('<div>').addClass('sticky')
       .attr({id: sticky['id']})
       .css({
+        width: width,
+        height: height,
         left: parseInt(sticky['left']),
         top: parseInt(sticky['top'])
       })
@@ -68,28 +69,28 @@ function create_sticky(sticky){
 
     sticky.move_sticky();
     textarea.change_text();
-    textarea.change_wh();
+    sticky.change_wh();
     delete_btn.delete_click();
   }
 }
 
 function search(){
-  $('#search').change(function() {
+  $('#search').keyup(function() {
     var search_text = $('#search').val();
     if(search_text != ""){
       data['sticky'].forEach(function(sticky, index){
-        if(sticky['text'].indexOf(search_text) != -1){
-          $('#contents').children('#'+index).css({background: '#F00'});
-        }
-        else{
-          $('#contents').children('#'+index).css({background: '#000'});
+        if(sticky != null){
+          if(sticky['text'].indexOf(search_text) != -1){
+            $('#contents').children('#'+index).fadeIn(200);
+          }
+          else{
+            $('#contents').children('#'+index).fadeOut(200);
+          }
         }
       })
     }
     else{
-      $('#contents').children().css({
-        background: '#000'
-      });
+      $('#contents').children().fadeIn(200);
     }
   });
 }
@@ -97,7 +98,7 @@ function search(){
 $.fn.delete_click = function(){
   $(this).click(function() {
     var id = $(this).parent('.sticky').attr('id');
-    $(this).parent('.sticky').hide().html('');
+    $(this).parent('.sticky').html('').remove();
     data['sticky'][id] = null;
     save();
   });
@@ -118,7 +119,7 @@ $.fn.move_sticky = function(){
 }
 
 $.fn.change_text = function(){
-  $(this).change(function() {
+  $(this).keyup(function() {
     var id = $(this).parent('.sticky').attr('id');
     data['sticky'][id]['text'] = $(this).val();
     save();
@@ -126,13 +127,15 @@ $.fn.change_text = function(){
 }
 
 $.fn.change_wh = function(){
-  $(this).bind('mouseup', function(){
-    var id = $(this).parent('.sticky').attr('id');
-    var w_now = $(this).parent('.sticky').width();
-    var h_now = $(this).parent('.sticky').height();
-    data['sticky'][id]['yoko'] = String(w_now);
-    data['sticky'][id]['tate'] = String(h_now);
-    save();
+  $(this).resizable({
+    stop: function(){
+      var id = $(this).attr('id');
+      var w_now = $(this).width();
+      var h_now = $(this).height();
+      data['sticky'][id]['yoko'] = String(w_now);
+      data['sticky'][id]['tate'] = String(h_now);
+      save();
+    }
   });
 }
 

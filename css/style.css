@@ -11,10 +11,6 @@ ul {
   background: url("../img/white_wall_hash.png");
 }
 
-#global-header .navbar-default {
-  background: #fefefe;
-}
-
 #controller {
   position: fixed;
   right: 20px;
@@ -30,9 +26,10 @@ ul {
 
 .sticky textarea {
   margin: 0;
-  width: 200px;
-  height: 100px;
-  resize: both;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  color: #EEE;
 }
 
 .sticky .delete_btn {
