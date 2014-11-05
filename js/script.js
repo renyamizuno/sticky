@@ -82,6 +82,7 @@ function create_sticky(sticky){
 
     textarea.change_text();
     textarea.editor_close();
+    textarea.change_tab();
     delete_btn.delete_click();
   }
 }
@@ -178,6 +179,25 @@ $.fn.change_wh = function(){
   });
 }
 
+$.fn.change_tab = function(){
+  $(this).keydown(tabKeyHandler);
+}
+
+function tabKeyHandler(e) {
+    var TABKEY = 9;
+    var v = '  ';
+    if(e.keyCode == TABKEY) {
+      var current_position = this.selectionStart;
+      var end_position = this.selectionEnd;
+      var text1 = $(this).val().substr(0, current_position);
+      var text2 = $(this).val().substr(current_position);
+      var value = text1 + '  ' + text2;
+      $(this).val(value);
+      this.selectionStart = current_position + 2;
+      this.selectionEnd = end_position + 2;
+      return false;
+    }
+}
 
 //TODO:チームモード実装後変更する
 function save(){
