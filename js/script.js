@@ -5,6 +5,9 @@ $(function(){
 });
 
 function init(){
+  marked.setOptions({
+    langPrefix: ''
+  });
   data = {"sticky":[]};
   var json = $.parseJSON(load());
   var d = json == null ? {
@@ -16,11 +19,10 @@ function init(){
   clear_click();
   search();
   hljs.initHighlightingOnLoad();
-  return true;
 }
 
 function add_click(){
-  $('#add').click(function() {
+  $('#add').click(function(){
     var sticky_obj = {
       'id': data['sticky'].length,
       'text': '',
@@ -50,11 +52,17 @@ function create_sticky(sticky){
     var height = parseInt(sticky['tate']) + 40;
     var textarea = $('<textarea>')
       .attr({placeholder: 'set Text'})
+      .css({
+        display: 'none'
+      })
       .addClass('form-control')
       .text(sticky['text']);
     var delete_btn = $('<a>')
       .addClass('glyphicon glyphicon-remove delete_btn')
-      .attr('href', 'javascript:void(0)');;
+      .attr('href', 'javascript:void(0)');
+    var view = $('<div>')
+      .addClass('view')
+      .html(marked(sticky['text']));
     var sticky = $('<div>').addClass('sticky')
       .attr({id: sticky['id']})
       .css({
@@ -65,17 +73,21 @@ function create_sticky(sticky){
       })
       .append(textarea)
       .append(delete_btn)
+      .append(view)
       .appendTo('#contents');
 
     sticky.move_sticky();
-    textarea.change_text();
     sticky.change_wh();
+    sticky.editor_launch();
+
+    textarea.change_text();
+    textarea.editor_close();
     delete_btn.delete_click();
   }
 }
 
 function search(){
-  $('#search').keyup(function() {
+  $('#search').keyup(function(){
     var search_text = $('#search').val();
     if(search_text != ""){
       data['sticky'].forEach(function(sticky, index){
@@ -119,10 +131,35 @@ $.fn.move_sticky = function(){
 }
 
 $.fn.change_text = function(){
-  $(this).keyup(function() {
+  $(this).keyup(function(){
     var id = $(this).parent('.sticky').attr('id');
     data['sticky'][id]['text'] = $(this).val();
     save();
+  });
+}
+
+$.fn.editor_launch = function(){
+  $(this).click(function(){
+    $(this).children('.view').css({
+      display: 'none'
+    });
+    $(this).children('textarea').css({
+      display: ''
+    }).focus();
+  });
+}
+
+$.fn.editor_close = function(){
+  $(this).focusout(function(){
+    $(this).css({
+      display: 'none'
+    });
+    $(this).parent('.sticky').children('.view').css({
+      display: ''
+    }).html(marked($(this).val()));
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
   });
 }
 

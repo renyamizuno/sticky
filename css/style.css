@@ -1,9 +1,3 @@
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 #wrapper {
   position: fixed;
   width: 100%;
@@ -17,8 +11,11 @@ ul {
   bottom: 20px;
 }
 
+#controller ul{
+  list-style: none;
+}
+
 .sticky {
-  position: fixed;
   border-radius: 3px;
   padding: 30px 10px 10px;
   background: #000;
@@ -29,6 +26,14 @@ ul {
   width: 100%;
   height: 100%;
   resize: none;
+  color: #EEE;
+}
+
+.sticky .view{
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
   color: #EEE;
 }
 
