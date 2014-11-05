@@ -16,6 +16,7 @@
 }
 
 .sticky {
+  position: absolute;
   border-radius: 3px;
   padding: 30px 10px 10px;
   background: #000;

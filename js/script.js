@@ -119,10 +119,12 @@ $.fn.delete_click = function(){
 $.fn.move_sticky = function(){
   $(this).draggable({
     connectToSortable: ".drop",
+    start: function(){
+      $('.sticky').css({zIndex: 0});
+      $(this).css({zIndex: 100});
+    },
     stop: function(){
       var id = $(this).attr('id');
-      $('.sticky').attr('z-index', '0');
-      $(this).attr('z-index', '100');
       data['sticky'][id]['left'] = $(this).css('left');
       data['sticky'][id]['top'] = $(this).css('top');
       save();
