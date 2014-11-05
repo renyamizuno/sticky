@@ -1,4 +1,8 @@
 # Sticky
 
-Stickyは付箋のような物
+Stickyは付箋アプリです。
+
+## TODO
+- `markdown`に対応
+- そのうち補完とかやりたい。
 
