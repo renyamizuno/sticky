@@ -79,6 +79,7 @@ function create_sticky(sticky){
     sticky.move_sticky();
     sticky.change_wh();
     sticky.editor_launch();
+    sticky.focus_sticky();
 
     textarea.change_text();
     textarea.editor_close();
@@ -120,10 +121,6 @@ $.fn.delete_click = function(){
 $.fn.move_sticky = function(){
   $(this).draggable({
     connectToSortable: ".drop",
-    start: function(){
-      $('.sticky').css({zIndex: 0});
-      $(this).css({zIndex: 100});
-    },
     stop: function(){
       var id = $(this).attr('id');
       data['sticky'][id]['left'] = $(this).css('left');
@@ -138,6 +135,13 @@ $.fn.change_text = function(){
     var id = $(this).parent('.sticky').attr('id');
     data['sticky'][id]['text'] = $(this).val();
     save();
+  });
+}
+
+$.fn.focus_sticky = function(){
+  $(this).hover(function(){
+    $('.sticky').css({zIndex: 0});
+    $(this).css({zIndex: 100});
   });
 }
 
